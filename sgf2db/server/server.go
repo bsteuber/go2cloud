@@ -13,13 +13,14 @@ import (
 
 func SgfUpload(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	sgf := string(body)
 	// TODO: Dispatch on unparseable sgf
 	if err != nil {
 		json.Response(w, status.InternalServerError, err)
 	}
 
 	// TODO: Do something useful with this
-	fmt.Println(body)
+	fmt.Println(sgf)
 	json.Response(w, status.OK, nil)
 }
 
