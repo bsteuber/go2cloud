@@ -22,7 +22,7 @@ func SgfUpload(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	// TODO: Do something useful with this
-	fmt.Println(body)
+	fmt.Println(string(body))
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
