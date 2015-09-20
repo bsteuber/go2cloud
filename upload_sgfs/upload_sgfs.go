@@ -3,6 +3,8 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -35,14 +37,19 @@ func sendSgf(path string) (err error) {
 	f, err := os.Open(path)
 	check(err)
 	defer f.Close()
+
 	r := bufio.NewReader(f)
 	resp, err := http.Post(server,
 		"application/x-go-sgf",
 		r)
 	check(err)
+	defer resp.Body.Close()
+
+	b, err := ioutil.ReadAll(io.LimitReader(resp.Body, 65536))
+	check(err)
 	if resp.StatusCode != 200 {
-		panic(fmt.Sprintf("Server returned wrong status code: %v",
-			resp.StatusCode))
+		panic(fmt.Sprintf("Server returned wrong status code: %v, Error: %v",
+			resp.StatusCode, b))
 	}
 	return nil
 }
@@ -65,5 +72,4 @@ func main() {
 		}
 		sendSgf(path)
 	}
-
 }
